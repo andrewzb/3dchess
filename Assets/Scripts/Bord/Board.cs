@@ -15,8 +15,8 @@ public class Board : SingeltonMonoBehavior<Board>
     [SerializeField] public GameObject knight;
     // figures
 
-
     // config for initialization
+    public FigureTeamType currentTeamTurn { get; set; }
     private List<BoardCellStruct> defaultBoardStructure;
     // list of state updetes count from default
     private List<TurnChange> ChangeList;
@@ -29,7 +29,8 @@ public class Board : SingeltonMonoBehavior<Board>
     protected override void Awake()
     {
         base.Awake();
-        mainCamera = Camera.main;
+        currentTeamTurn = FigureTeamType.black;
+        SetMainCamera();
         defaultBoardStructure = new DefaultBoardConfig().defaultBoardListConfig;
         markCellsAsCanBeDragToList.canBeCapture = new List<BoardCellId>();
         markCellsAsCanBeDragToList.canBeDreggedTo = new List<BoardCellId>();
@@ -50,10 +51,12 @@ public class Board : SingeltonMonoBehavior<Board>
             if (hasHit)
             {
                 BoardCell boardCell = hit.collider.gameObject.GetComponent<BoardCell>();
-                if (boardCell != null && boardCell.figureOnCell == null && selectedBoardSell == null)
+                if ((boardCell != null && boardCell.figureOnCell == null && selectedBoardSell == null) || boardCell == null)
                     return;
                 if (selectedBoardSell != null && !isCellMarkapEmpty() && selectedBoardSell.CellId == boardCell.CellId)
                 {
+
+                    Debug.Log("1111");
                     selectedBoardSell.ResetCellMark();
                     ResetCellsMarkAsADefault(markCellsAsCanBeDragToList);
                     selectedBoardSell = null;
@@ -75,22 +78,31 @@ public class Board : SingeltonMonoBehavior<Board>
                     }
                     else
                     {
-                        selectedBoardSell.ResetCellMark();
-                        ResetCellsMarkAsADefault(markCellsAsCanBeDragToList);
+                        if (boardCell.figureOnCell != null)
+                        {
+
+
+                            selectedBoardSell.ResetCellMark();
+                            ResetCellsMarkAsADefault(markCellsAsCanBeDragToList);
+                            boardCell.MarkAsSelected();
+                            selectedBoardSell = boardCell;
+                            CellMarkupStructure draggableCellIds = boardCell.figureOnCell.GetComponent<IFigure>().GetCellIdsOnWithCanBeDraged(BoardCellsList, boardCell);
+                            markCellsAsCanBeDragToList = draggableCellIds;
+                            MarkCellsByType(draggableCellIds);
+
+                        }
+                    }
+                }
+                else
+                {
+                    if (boardCell.figureOnCell.GetComponent<Figure>().TeamType == currentTeamTurn)
+                    {
                         boardCell.MarkAsSelected();
                         selectedBoardSell = boardCell;
                         CellMarkupStructure draggableCellIds = boardCell.figureOnCell.GetComponent<IFigure>().GetCellIdsOnWithCanBeDraged(BoardCellsList, boardCell);
                         markCellsAsCanBeDragToList = draggableCellIds;
                         MarkCellsByType(draggableCellIds);
                     }
-                }
-                else
-                {
-                    boardCell.MarkAsSelected();
-                    selectedBoardSell = boardCell;
-                    CellMarkupStructure draggableCellIds = boardCell.figureOnCell.GetComponent<IFigure>().GetCellIdsOnWithCanBeDraged(BoardCellsList, boardCell);
-                    markCellsAsCanBeDragToList = draggableCellIds;
-                    MarkCellsByType(draggableCellIds);
                 }
             }
         }
@@ -113,8 +125,20 @@ public class Board : SingeltonMonoBehavior<Board>
         Vector3 localNewFigurePosition = boardCell.GetCellPivotPointVector();
         GameObject localFigure = selectedBoardSell.figureOnCell;
         selectedBoardSell.figureOnCell = null;
+        GameObject figureOnCaptureCell = boardCell.figureOnCell;
+        if(figureOnCaptureCell != null)
+        {
+            Destroy(figureOnCaptureCell);
+        }
         boardCell.figureOnCell = localFigure;
         localFigure.transform.position = localNewFigurePosition;
+        // Call End of turn handler
+        EventHandler.CallSwithToOtherPlayerTeamEvent(currentTeamTurn == FigureTeamType.white ? FigureTeamType.black :FigureTeamType.white);
+    }
+
+    public void SetMainCamera()
+    {
+        mainCamera = Camera.main;
     }
 
     public void MarkCellsByType(CellMarkupStructure CellMarkup)

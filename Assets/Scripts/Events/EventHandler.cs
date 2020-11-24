@@ -1,26 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public delegate void DelegatExaple();
+public delegate void SwithToOtherPlayer(FigureTeamType figureTeamType);
 
 public static class EventHandler
 {
-    //public static event Action<InventoryLocation, List<InventoryItem>> InventoryUpdatedEvent;
-    /*public static void CallInventoryUpdatedEvent(InventoryLocation inventoryLocation, List<InventoryItem> inventoryList)
-    {
-        if (InventoryUpdatedEvent != null)
-            InventoryUpdatedEvent(inventoryLocation, inventoryList);
-    }*/
+    public static event SwithToOtherPlayer SwithToOtherPlayerTeam;
 
-    // MovementEvent
-    public static event DelegatExaple DelegatExapleEvent;
-    // MovementEvent Call for Publishers
-
-    public static void CallDelegatExapleEvent()
+    public static void CallSwithToOtherPlayerTeamEvent(FigureTeamType figureTeamType)
     {
-        if (DelegatExapleEvent != null)
+        if (SwithToOtherPlayerTeam != null)
         {
-            DelegatExapleEvent();
+            SwithToOtherPlayerTeam(figureTeamType);
         }
     }
 

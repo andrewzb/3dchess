@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1714896928141559742}
   - component: {fileID: 3080825172532182695}
+  - component: {fileID: 5543247085117022685}
   m_Layer: 2
   m_Name: Knight
   m_TagString: Untagged
@@ -49,6 +50,18 @@ MonoBehaviour:
   defaultBlackMaterial: {fileID: 2100000, guid: b2079b72fa3d6904cafdb3bb96fe17f5,
     type: 2}
   figureMesh: {fileID: 4070431014556427745}
+--- !u!114 &5543247085117022685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7095806684534953077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfdefbc79f7438c4aad0f547037b127b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3971809964590716662
 PrefabInstance:
   m_ObjectHideFlags: 0
