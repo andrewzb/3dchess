@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BoardCell : MonoBehaviour
 {
-
     [SerializeField]
     public BoardCellId CellId;
     [SerializeField]
@@ -56,6 +55,15 @@ public class BoardCell : MonoBehaviour
         {
             markStatus = ActionColorsType.canBeDraged;
             cellMarker.GetComponent<MeshRenderer>().material = canBeDragedMaterial;
+        }
+    }
+
+    public void MarkAsCanBeCapture()
+    {
+        if (markStatus != ActionColorsType.captureCell)
+        {
+            markStatus = ActionColorsType.captureCell;
+            cellMarker.GetComponent<MeshRenderer>().material = captureCellMaterial;
         }
     }
 

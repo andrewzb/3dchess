@@ -8,6 +8,11 @@ public class Board : SingeltonMonoBehavior<Board>
     public List<BoardCell> BoardCellsList;
     // figures
     [SerializeField] public GameObject pawn;
+    [SerializeField] public GameObject rook;
+    [SerializeField] public GameObject bishop;
+    [SerializeField] public GameObject queen;
+    [SerializeField] public GameObject king;
+    [SerializeField] public GameObject knight;
     // figures
 
 
@@ -17,7 +22,7 @@ public class Board : SingeltonMonoBehavior<Board>
     private List<TurnChange> ChangeList;
     private Ray lastRay;
     private BoardCell selectedBoardSell = null;
-    private List<BoardCellId> markCellsAsCanBeDragToList = null;
+    private CellMarkupStructure markCellsAsCanBeDragToList = new CellMarkupStructure ();
     private Camera mainCamera;
 
 
@@ -26,6 +31,8 @@ public class Board : SingeltonMonoBehavior<Board>
         base.Awake();
         mainCamera = Camera.main;
         defaultBoardStructure = new DefaultBoardConfig().defaultBoardListConfig;
+        markCellsAsCanBeDragToList.canBeCapture = new List<BoardCellId>();
+        markCellsAsCanBeDragToList.canBeDreggedTo = new List<BoardCellId>();
     }
 
     private void Start()
@@ -43,17 +50,16 @@ public class Board : SingeltonMonoBehavior<Board>
             if (hasHit)
             {
                 BoardCell boardCell = hit.collider.gameObject.GetComponent<BoardCell>();
-                if (boardCell.figureOnCell == null && selectedBoardSell == null)
+                if (boardCell != null && boardCell.figureOnCell == null && selectedBoardSell == null)
                     return;
-                if (selectedBoardSell != null && markCellsAsCanBeDragToList != null && selectedBoardSell.CellId == boardCell.CellId)
+                if (selectedBoardSell != null && !isCellMarkapEmpty() && selectedBoardSell.CellId == boardCell.CellId)
                 {
-                    Debug.Log("1111");
                     selectedBoardSell.ResetCellMark();
                     ResetCellsMarkAsADefault(markCellsAsCanBeDragToList);
                     selectedBoardSell = null;
-                    markCellsAsCanBeDragToList = null;
+                    ResetMarksCells();
                 }
-                else if (selectedBoardSell != null && markCellsAsCanBeDragToList != null && selectedBoardSell.CellId != boardCell.CellId)
+                else if (selectedBoardSell != null && !isCellMarkapEmpty() && selectedBoardSell.CellId != boardCell.CellId)
                 {
                     // if you with selected your's figure
                     // 1 select your figure it will reset selection
@@ -65,7 +71,7 @@ public class Board : SingeltonMonoBehavior<Board>
                         selectedBoardSell.ResetCellMark();
                         ResetCellsMarkAsADefault(markCellsAsCanBeDragToList);
                         selectedBoardSell = null;
-                        markCellsAsCanBeDragToList = null;
+                        ResetMarksCells();
                     }
                     else
                     {
@@ -73,24 +79,33 @@ public class Board : SingeltonMonoBehavior<Board>
                         ResetCellsMarkAsADefault(markCellsAsCanBeDragToList);
                         boardCell.MarkAsSelected();
                         selectedBoardSell = boardCell;
-                        //List<BoardCellId> draggableCellIds = boardCell.figureOnCell.GetComponent<Figure>().GetCellsOnWhihFigureCanBeDragged1();
-                        //List<BoardCellId> draggableCellIds = boardCell.figureOnCell.GetComponent<Figure>().GetCellsOnWhihFigureCanBeDragged();
-                        List<BoardCellId> draggableCellIds = boardCell.figureOnCell.GetComponent<IFigure>().GetCellIdsOnWithCanBeDraged(BoardCellsList, boardCell);
+                        CellMarkupStructure draggableCellIds = boardCell.figureOnCell.GetComponent<IFigure>().GetCellIdsOnWithCanBeDraged(BoardCellsList, boardCell);
                         markCellsAsCanBeDragToList = draggableCellIds;
-                        MarkCellsAsCanBeDragTo(draggableCellIds);
+                        MarkCellsByType(draggableCellIds);
                     }
                 }
                 else
                 {
                     boardCell.MarkAsSelected();
                     selectedBoardSell = boardCell;
-                    //List<BoardCellId> draggableCellIds = boardCell.figureOnCell.GetComponent<Figure>().GetCellsOnWhihFigureCanBeDragged();
-                    List<BoardCellId> draggableCellIds = boardCell.figureOnCell.GetComponent<IFigure>().GetCellIdsOnWithCanBeDraged(BoardCellsList, boardCell);
+                    CellMarkupStructure draggableCellIds = boardCell.figureOnCell.GetComponent<IFigure>().GetCellIdsOnWithCanBeDraged(BoardCellsList, boardCell);
                     markCellsAsCanBeDragToList = draggableCellIds;
-                    MarkCellsAsCanBeDragTo(draggableCellIds);
+                    MarkCellsByType(draggableCellIds);
                 }
             }
         }
+    }
+
+    private bool isCellMarkapEmpty()
+    {
+        return markCellsAsCanBeDragToList.canBeCapture.Count == 0 && markCellsAsCanBeDragToList.canBeDreggedTo.Count == 0;
+
+    }
+
+    private void ResetMarksCells()
+    {
+        markCellsAsCanBeDragToList.canBeCapture = new List<BoardCellId>();
+        markCellsAsCanBeDragToList.canBeDreggedTo = new List<BoardCellId>();
     }
 
     private void RelocateFigureToCell(BoardCell selectedBoardSell, BoardCell boardCell)
@@ -102,32 +117,37 @@ public class Board : SingeltonMonoBehavior<Board>
         localFigure.transform.position = localNewFigurePosition;
     }
 
-    public void MarkCellsAsCanBeDragTo(List<BoardCellId> draggableCellIds)
+    public void MarkCellsByType(CellMarkupStructure CellMarkup)
     {
         foreach (var cell in BoardCellsList)
         {
-            int couresponeCellIndex = draggableCellIds.FindIndex(id => id == cell.CellId);
-            if (couresponeCellIndex == -1)
-                continue;
-            cell.MarkAsCanBeDragger();
+            int canBeDreggedCouresponeCellIndex = CellMarkup.canBeDreggedTo.FindIndex(id => id == cell.CellId);
+            int canBeCapturCouresponeCellIndex = CellMarkup.canBeCapture.FindIndex(id => id == cell.CellId);
+            if (canBeDreggedCouresponeCellIndex != -1)
+                cell.MarkAsCanBeDragger();
+            if (canBeCapturCouresponeCellIndex != -1)
+                cell.MarkAsCanBeCapture();
         }
     }
 
-    public void ResetCellsMarkAsADefault(List<BoardCellId> draggableCellIds)
+    public void ResetCellsMarkAsADefault(CellMarkupStructure CellMarkup)
     {
         foreach (var cell in BoardCellsList)
         {
-            int couresponeCellIndex = draggableCellIds.FindIndex(id => id == cell.CellId);
-            if (couresponeCellIndex == -1)
-                continue;
-            cell.ResetCellMark();
+            int canBeDreggedCouresponeCellIndex = CellMarkup.canBeDreggedTo.FindIndex(id => id == cell.CellId);
+            int canBeCapturCouresponeCellIndex = CellMarkup.canBeCapture.FindIndex(id => id == cell.CellId);
+            if (canBeDreggedCouresponeCellIndex != -1)
+                cell.ResetCellMark();
+            if (canBeCapturCouresponeCellIndex != -1)
+                cell.ResetCellMark();
         }
     }
 
-    public bool CellInDraggableList(BoardCell boardCell, List<BoardCellId> cellIdsList)
+    public bool CellInDraggableList(BoardCell boardCell, CellMarkupStructure CellMarkup)
     {
-        int index = cellIdsList.FindIndex(id => id == boardCell.CellId);
-        if(index != -1)
+        int canBeDreggedCouresponeCellIndex = CellMarkup.canBeDreggedTo.FindIndex(id => id == boardCell.CellId);
+        int canBeCapturCouresponeCellIndex = CellMarkup.canBeCapture.FindIndex(id => id == boardCell.CellId);
+        if (canBeDreggedCouresponeCellIndex != -1 || canBeCapturCouresponeCellIndex != -1)
         {
             return true;
         }
@@ -135,13 +155,21 @@ public class Board : SingeltonMonoBehavior<Board>
     }
 
 
-
     // #nullable enable
     private GameObject GetFigureByType(FigureType figureType)
     {
         if (figureType == FigureType.pawn)
             return pawn;
-
+        if (figureType == FigureType.rook)
+            return rook;
+        if (figureType == FigureType.queen)
+            return queen;
+        if (figureType == FigureType.king)
+            return king;
+        if (figureType == FigureType.knight)
+            return knight;
+        if (figureType == FigureType.bishop)
+            return bishop;
         return pawn;
     }
  //   #nullable disable
@@ -165,7 +193,6 @@ public class Board : SingeltonMonoBehavior<Board>
                 {
                     cell.SpawnFigure(spawnFigure, existCellFigure);
                 }
-
             }
 
         }
