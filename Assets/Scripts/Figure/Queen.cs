@@ -29,7 +29,6 @@ public class Queen : FigureDefaultMonoBehavior, IFigure
                .Concat(forwardLeftList.canBeCapture)
                .Concat(backwardLeftList.canBeCapture)
                .Concat(backwardRightList.canBeCapture)
-
                .Concat(forwardList.canBeCapture)
                .Concat(backwardList.canBeCapture)
                .Concat(rightList.canBeCapture)
@@ -40,7 +39,6 @@ public class Queen : FigureDefaultMonoBehavior, IFigure
                .Concat(forwardLeftList.canBeDreggedTo)
                .Concat(backwardLeftList.canBeDreggedTo)
                .Concat(backwardRightList.canBeDreggedTo)
-
                .Concat(forwardList.canBeDreggedTo)
                .Concat(backwardList.canBeDreggedTo)
                .Concat(rightList.canBeDreggedTo)
