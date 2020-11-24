@@ -34,29 +34,4 @@ public class Figure : MonoBehaviour
         return gameObject;
     }
 
-    public List<BoardCellId> GetCellsOnWhihFigureCanBeDragged()
-    {
-        return new List<BoardCellId>()
-        {
-            BoardCellId.B1,
-            BoardCellId.B2,
-            BoardCellId.C2,
-            BoardCellId.D2,
-            BoardCellId.D1
-        };
-    }
-
-    public List<BoardCellId> GetCellsOnWhihFigureCanBeDragged1()
-    {
-        return new List<BoardCellId>()
-        {
-            BoardCellId.C7,
-            BoardCellId.C8,
-            BoardCellId.E5,
-            BoardCellId.D4,
-            BoardCellId.F7
-        };
-    }
-
-
 }

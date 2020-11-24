@@ -421,6 +421,11 @@ MonoBehaviour:
   - {fileID: 6466163158152814286}
   - {fileID: 6466163158925300053}
   pawn: {fileID: 4884769574425549983, guid: 38b2125d4d7d9844fa8fe44b4680a6dc, type: 3}
+  rook: {fileID: 6642966235287618261, guid: 7e6f6a1a326c7cf47b49d2fa126d42fd, type: 3}
+  bishop: {fileID: 4910275001422555433, guid: 3bf98627766f44446b098331e5f5aae6, type: 3}
+  queen: {fileID: 4395694896008551713, guid: c9ab7d6f0dba3fc46b15a5f9531ebd5c, type: 3}
+  king: {fileID: 5509137763476438180, guid: f5c2457f4d74dc247bd25e14aa88c3c6, type: 3}
+  knight: {fileID: 7095806684534953077, guid: 0029aca000208f8418197c4aa2218946, type: 3}
 --- !u!1001 &1205035738011931524
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -690,7 +695,7 @@ PrefabInstance:
     - target: {fileID: 2400982741818258107, guid: d2dda16776a53a3498e4e9ad31834c46,
         type: 3}
       propertyPath: CellId
-      value: 50
+      value: 58
       objectReference: {fileID: 0}
     - target: {fileID: 2400982741818258107, guid: d2dda16776a53a3498e4e9ad31834c46,
         type: 3}
@@ -6359,7 +6364,7 @@ PrefabInstance:
     - target: {fileID: 2400982741818258107, guid: d2dda16776a53a3498e4e9ad31834c46,
         type: 3}
       propertyPath: CellId
-      value: 57
+      value: 56
       objectReference: {fileID: 0}
     - target: {fileID: 2400982741818258107, guid: d2dda16776a53a3498e4e9ad31834c46,
         type: 3}

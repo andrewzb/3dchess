@@ -146,5 +146,7 @@ public enum BoardCellId
     H5,
     H6,
     H7,
-    H8
+    H8,
+
+    none
 }

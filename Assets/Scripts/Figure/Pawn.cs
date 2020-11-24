@@ -5,31 +5,28 @@ using UnityEngine;
 public class Pawn : MonoBehaviour, IFigure
 {
     private bool firsMove = true;
-    private Figure figure;
 
-    private void Awake()
+    public CellMarkupStructure GetCellIdsOnWithCanBeDraged(List<BoardCell> cellIdsList, BoardCell boardCell)
     {
-        figure = gameObject.GetComponent<Figure>();
-    }
-
-
-
-    public List<BoardCellId> GetCellIdsOnWithCanBeDraged(List<BoardCell> cellIdsList, BoardCell boardCell)
-    {
-        List<BoardCellId> localCellIdsList = new List<BoardCellId>();
+        CellMarkupStructure localCellIdsListBYType = new CellMarkupStructure();
+        localCellIdsListBYType.canBeCapture = new List<BoardCellId>();
+        localCellIdsListBYType.canBeDreggedTo = new List<BoardCellId>();
         BoardCellId currentCellId = boardCell.CellId;
         int index = cellIdsList.FindIndex(c => c.CellId == boardCell.CellId);
         if (firsMove)
         {
             firsMove = false;
-            localCellIdsList.Add(cellIdsList[index + 8].CellId);
-            localCellIdsList.Add(cellIdsList[index + 16].CellId);
+            localCellIdsListBYType.canBeDreggedTo = new List<BoardCellId>();
+            localCellIdsListBYType.canBeDreggedTo.Add(cellIdsList[index + 8].CellId);
+            localCellIdsListBYType.canBeDreggedTo.Add(cellIdsList[index + 16].CellId);
         }
         else
         {
-            localCellIdsList.Add(cellIdsList[index + 8].CellId);
+            localCellIdsListBYType.canBeDreggedTo = new List<BoardCellId>();
+            localCellIdsListBYType.canBeDreggedTo.Add(cellIdsList[index + 8].CellId);
         }
-        return localCellIdsList;
+        localCellIdsListBYType.canBeCapture = new List<BoardCellId>();
+        return localCellIdsListBYType;
     }
 
 }
