@@ -12,6 +12,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
         figure = gameObject.GetComponent<Figure>();
     }
 
+    // ways by 1 cell
     public BoardCell GetForwardCell(List<BoardCell> cellIdsList, ref int index)
     {
         index += 8;
@@ -58,7 +59,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
         int rowIndex = (int)(localIndex / 8) + 1;
         int lowBoundary = ((rowIndex - 1) * 8);
         int hieBoundary = ((rowIndex) * 8) - 1;
-        index+=9;
+        index += 9;
         if (index > hieBoundary || index < lowBoundary || index > 63)
         {
             return null;
@@ -108,16 +109,17 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
         return cellIdsList[index];
     }
 
+    // ways to the end
+
     public CellMarkupStructure GetForwardMoveCellsId(List<BoardCell> cellIdsList, int index)
     {
         FigureTeamType figureTeamType = figure.TeamType;
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index;
         do
         {
             BoardCell boardCell = GetForwardCell(cellIdsList, ref localIndex);
-            if(boardCell != null)
+            if (boardCell != null)
             {
                 if (boardCell.figureOnCell != null)
                 {
@@ -128,14 +130,14 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                     }
                     else
                     {
-                        localCellIdsListCanBeCapture.Add(boardCell.CellId);
+                        localCellMarkupStruct.canBeCapture.Add(boardCell.CellId);
                         break;
                     }
-    
+
                 }
                 else
                 {
-                    localCellIdsListForDragg.Add(boardCell.CellId);
+                    localCellMarkupStruct.canBeDreggedTo.Add(boardCell.CellId);
                 }
             }
             else
@@ -143,17 +145,13 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 break;
             }
         } while (true);
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
         return localCellMarkupStruct;
     }
 
     public CellMarkupStructure GetBackwardMoveCellsId(List<BoardCell> cellIdsList, int index)
     {
         FigureTeamType figureTeamType = figure.TeamType;
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index;
         do
         {
@@ -169,14 +167,14 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                     }
                     else
                     {
-                        localCellIdsListCanBeCapture.Add(boardCell.CellId);
+                        localCellMarkupStruct.canBeCapture.Add(boardCell.CellId);
                         break;
                     }
 
                 }
                 else
                 {
-                    localCellIdsListForDragg.Add(boardCell.CellId);
+                    localCellMarkupStruct.canBeDreggedTo.Add(boardCell.CellId);
                 }
             }
             else
@@ -184,9 +182,6 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 break;
             }
         } while (true);
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
         return localCellMarkupStruct;
     }
 
@@ -196,8 +191,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
         int lowBoundary = ((rowIndex - 1) * 8);
         int hieBoundary = ((rowIndex) * 8) - 1;
         FigureTeamType figureTeamType = figure.TeamType;
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index;
         do
         {
@@ -213,13 +207,13 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                     }
                     else
                     {
-                        localCellIdsListCanBeCapture.Add(boardCell.CellId);
+                        localCellMarkupStruct.canBeCapture.Add(boardCell.CellId);
                         break;
                     }
                 }
                 else
                 {
-                    localCellIdsListForDragg.Add(boardCell.CellId);
+                    localCellMarkupStruct.canBeDreggedTo.Add(boardCell.CellId);
                 }
             }
             else
@@ -227,9 +221,6 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 break;
             }
         } while (true);
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
         return localCellMarkupStruct;
     }
 
@@ -239,8 +230,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
         int lowBoundary = ((rowIndex - 1) * 8);
         int hieBoundary = ((rowIndex) * 8) - 1;
         FigureTeamType figureTeamType = figure.TeamType;
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index;
         do
         {
@@ -256,13 +246,13 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                     }
                     else
                     {
-                        localCellIdsListCanBeCapture.Add(boardCell.CellId);
+                        localCellMarkupStruct.canBeCapture.Add(boardCell.CellId);
                         break;
                     }
                 }
                 else
                 {
-                    localCellIdsListForDragg.Add(boardCell.CellId);
+                    localCellMarkupStruct.canBeDreggedTo.Add(boardCell.CellId);
                 }
             }
             else
@@ -270,17 +260,13 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 break;
             }
         } while (true);
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
         return localCellMarkupStruct;
     }
 
     public CellMarkupStructure GetForwardRightMoveCellsId(List<BoardCell> cellIdsList, int index)
     {
         FigureTeamType figureTeamType = figure.TeamType;
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index;
         do
         {
@@ -296,14 +282,14 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                     }
                     else
                     {
-                        localCellIdsListCanBeCapture.Add(boardCell.CellId);
+                        localCellMarkupStruct.canBeCapture.Add(boardCell.CellId);
                         break;
                     }
 
                 }
                 else
                 {
-                    localCellIdsListForDragg.Add(boardCell.CellId);
+                    localCellMarkupStruct.canBeDreggedTo.Add(boardCell.CellId);
                 }
             }
             else
@@ -311,17 +297,13 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 break;
             }
         } while (true);
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
         return localCellMarkupStruct;
     }
 
     public CellMarkupStructure GetForwardLeftMoveCellsId(List<BoardCell> cellIdsList, int index)
     {
         FigureTeamType figureTeamType = figure.TeamType;
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index;
         do
         {
@@ -337,14 +319,14 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                     }
                     else
                     {
-                        localCellIdsListCanBeCapture.Add(boardCell.CellId);
+                        localCellMarkupStruct.canBeCapture.Add(boardCell.CellId);
                         break;
                     }
 
                 }
                 else
                 {
-                    localCellIdsListForDragg.Add(boardCell.CellId);
+                    localCellMarkupStruct.canBeDreggedTo.Add(boardCell.CellId);
                 }
             }
             else
@@ -352,17 +334,13 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 break;
             }
         } while (true);
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
         return localCellMarkupStruct;
     }
 
     public CellMarkupStructure GetBackwardRightMoveCellsId(List<BoardCell> cellIdsList, int index)
     {
         FigureTeamType figureTeamType = figure.TeamType;
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index;
         do
         {
@@ -378,14 +356,14 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                     }
                     else
                     {
-                        localCellIdsListCanBeCapture.Add(boardCell.CellId);
+                        localCellMarkupStruct.canBeCapture.Add(boardCell.CellId);
                         break;
                     }
 
                 }
                 else
                 {
-                    localCellIdsListForDragg.Add(boardCell.CellId);
+                    localCellMarkupStruct.canBeDreggedTo.Add(boardCell.CellId);
                 }
             }
             else
@@ -393,17 +371,13 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 break;
             }
         } while (true);
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
         return localCellMarkupStruct;
     }
 
     public CellMarkupStructure GetBackwardLeftMoveCellsId(List<BoardCell> cellIdsList, int index)
     {
         FigureTeamType figureTeamType = figure.TeamType;
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index;
         do
         {
@@ -419,14 +393,14 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                     }
                     else
                     {
-                        localCellIdsListCanBeCapture.Add(boardCell.CellId);
+                        localCellMarkupStruct.canBeCapture.Add(boardCell.CellId);
                         break;
                     }
 
                 }
                 else
                 {
-                    localCellIdsListForDragg.Add(boardCell.CellId);
+                    localCellMarkupStruct.canBeDreggedTo.Add(boardCell.CellId);
                 }
             }
             else
@@ -434,9 +408,6 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 break;
             }
         } while (true);
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
         return localCellMarkupStruct;
     }
 
@@ -445,10 +416,9 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
     public CellMarkupStructure GetForwardMoveCellSIdByCount(List<BoardCell> cellIdsList, int index, int count, bool canBeDragged = true, bool canBeCapture = true)
     {
         FigureTeamType figureTeamType = figure.TeamType;
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index;
-        for (int i = 0 ; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             BoardCell boardCell = GetForwardCell(cellIdsList, ref localIndex);
             if (boardCell != null)
@@ -463,7 +433,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                     else
                     {
                         if (canBeCapture)
-                        localCellIdsListCanBeCapture.Add(boardCell.CellId);
+                            localCellMarkupStruct.canBeCapture.Add(boardCell.CellId);
                         break;
                     }
 
@@ -471,7 +441,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 else
                 {
                     if (canBeDragged)
-                        localCellIdsListForDragg.Add(boardCell.CellId);
+                        localCellMarkupStruct.canBeDreggedTo.Add(boardCell.CellId);
                 }
             }
             else
@@ -479,17 +449,13 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 break;
             }
         }
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
         return localCellMarkupStruct;
     }
 
     public CellMarkupStructure GetBackwardMoveCellSIdByCount(List<BoardCell> cellIdsList, int index, int count, bool canBeDragged = true, bool canBeCapture = true)
     {
         FigureTeamType figureTeamType = figure.TeamType;
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index;
         for (int i = 0; i < count; i++)
         {
@@ -506,7 +472,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                     else
                     {
                         if (canBeCapture)
-                            localCellIdsListCanBeCapture.Add(boardCell.CellId);
+                            localCellMarkupStruct.canBeCapture.Add(boardCell.CellId);
                         break;
                     }
 
@@ -514,7 +480,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 else
                 {
                     if (canBeDragged)
-                        localCellIdsListForDragg.Add(boardCell.CellId);
+                        localCellMarkupStruct.canBeDreggedTo.Add(boardCell.CellId);
                 }
             }
             else
@@ -522,17 +488,13 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 break;
             }
         }
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
         return localCellMarkupStruct;
     }
 
     public CellMarkupStructure GetForwardRightMoveCellsIdByCount(List<BoardCell> cellIdsList, int index, int count, bool canBeDragged = true, bool canBeCapture = true)
     {
         FigureTeamType figureTeamType = figure.TeamType;
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index;
         for (int i = 0; i < count; i++)
         {
@@ -549,7 +511,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                     else
                     {
                         if (canBeCapture)
-                            localCellIdsListCanBeCapture.Add(boardCell.CellId);
+                            localCellMarkupStruct.canBeCapture.Add(boardCell.CellId);
                         break;
                     }
 
@@ -557,7 +519,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 else
                 {
                     if (canBeDragged)
-                        localCellIdsListForDragg.Add(boardCell.CellId);
+                        localCellMarkupStruct.canBeDreggedTo.Add(boardCell.CellId);
                 }
             }
             else
@@ -565,17 +527,13 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 break;
             }
         }
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
         return localCellMarkupStruct;
     }
 
     public CellMarkupStructure GetForwardLeftMoveCellsIdByCount(List<BoardCell> cellIdsList, int index, int count, bool canBeDragged = true, bool canBeCapture = true)
     {
         FigureTeamType figureTeamType = figure.TeamType;
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index;
         for (int i = 0; i < count; i++)
         {
@@ -592,7 +550,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                     else
                     {
                         if (canBeCapture)
-                            localCellIdsListCanBeCapture.Add(boardCell.CellId);
+                            localCellMarkupStruct.canBeCapture.Add(boardCell.CellId);
                         break;
                     }
 
@@ -600,7 +558,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 else
                 {
                     if (canBeDragged)
-                        localCellIdsListForDragg.Add(boardCell.CellId);
+                        localCellMarkupStruct.canBeDreggedTo.Add(boardCell.CellId);
                 }
             }
             else
@@ -608,24 +566,20 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 break;
             }
         }
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
         return localCellMarkupStruct;
     }
 
     public CellMarkupStructure GetBackwardLeftMoveCellsIdByCount(List<BoardCell> cellIdsList, int index, int count, bool canBeDragged = true, bool canBeCapture = true)
     {
         FigureTeamType figureTeamType = figure.TeamType;
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index;
         for (int i = 0; i < count; i++)
         {
             BoardCell boardCell = GetBackwardLeftCell(cellIdsList, ref localIndex);
             if (boardCell != null)
             {
-                if (boardCell.figureOnCell != null)
+                           if (boardCell.figureOnCell != null)
                 {
                     Figure localFigureOnCell = boardCell.figureOnCell.GetComponent<Figure>();
                     if (localFigureOnCell.TeamType == figureTeamType)
@@ -635,7 +589,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                     else
                     {
                         if (canBeCapture)
-                            localCellIdsListCanBeCapture.Add(boardCell.CellId);
+                            localCellMarkupStruct.canBeCapture.Add(boardCell.CellId);
                         break;
                     }
 
@@ -643,7 +597,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 else
                 {
                     if (canBeDragged)
-                        localCellIdsListForDragg.Add(boardCell.CellId);
+                        localCellMarkupStruct.canBeDreggedTo.Add(boardCell.CellId);
                 }
             }
             else
@@ -651,17 +605,13 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 break;
             }
         }
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
         return localCellMarkupStruct;
     }
 
     public CellMarkupStructure GetBackwardRightMoveCellsIdByCount(List<BoardCell> cellIdsList, int index, int count, bool canBeDragged = true, bool canBeCapture = true)
     {
         FigureTeamType figureTeamType = figure.TeamType;
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index;
         for (int i = 0; i < count; i++)
         {
@@ -678,7 +628,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                     else
                     {
                         if (canBeCapture)
-                            localCellIdsListCanBeCapture.Add(boardCell.CellId);
+                            localCellMarkupStruct.canBeCapture.Add(boardCell.CellId);
                         break;
                     }
 
@@ -686,7 +636,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 else
                 {
                     if (canBeDragged)
-                        localCellIdsListForDragg.Add(boardCell.CellId);
+                        localCellMarkupStruct.canBeDreggedTo.Add(boardCell.CellId);
                 }
             }
             else
@@ -694,9 +644,6 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 break;
             }
         }
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
         return localCellMarkupStruct;
     }
 
@@ -706,8 +653,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
         int lowBoundary = ((rowIndex - 1) * 8);
         int hieBoundary = ((rowIndex) * 8) - 1;
         FigureTeamType figureTeamType = figure.TeamType;
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index;
         for (int i = 0; i < count; i++)
         {
@@ -724,7 +670,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                     else
                     {
                         if (canBeCapture)
-                            localCellIdsListCanBeCapture.Add(boardCell.CellId);
+                            localCellMarkupStruct.canBeCapture.Add(boardCell.CellId);
                         break;
                     }
 
@@ -732,7 +678,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 else
                 {
                     if (canBeDragged)
-                        localCellIdsListForDragg.Add(boardCell.CellId);
+                        localCellMarkupStruct.canBeDreggedTo.Add(boardCell.CellId);
                 }
             }
             else
@@ -740,9 +686,6 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 break;
             }
         }
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
         return localCellMarkupStruct;
     }
 
@@ -752,8 +695,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
         int lowBoundary = ((rowIndex - 1) * 8);
         int hieBoundary = ((rowIndex) * 8) - 1;
         FigureTeamType figureTeamType = figure.TeamType;
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index;
         for (int i = 0; i < count; i++)
         {
@@ -770,7 +712,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                     else
                     {
                         if (canBeCapture)
-                            localCellIdsListCanBeCapture.Add(boardCell.CellId);
+                            localCellMarkupStruct.canBeCapture.Add(boardCell.CellId);
                         break;
                     }
 
@@ -778,7 +720,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 else
                 {
                     if (canBeDragged)
-                        localCellIdsListForDragg.Add(boardCell.CellId);
+                        localCellMarkupStruct.canBeDreggedTo.Add(boardCell.CellId);
                 }
             }
             else
@@ -786,9 +728,6 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
                 break;
             }
         }
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
         return localCellMarkupStruct;
     }
 
@@ -797,11 +736,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
     public CellMarkupStructure GetForwardKnightFork(List<BoardCell> cellIdsList, int index)
     {
         FigureTeamType figureTeamType = figure.TeamType;
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index + 16;
         if (localIndex > 63)
         {
@@ -826,11 +761,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
     public CellMarkupStructure GetBackwardKnightFork(List<BoardCell> cellIdsList, int index)
     {
         FigureTeamType figureTeamType = figure.TeamType;
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index - 16;
         if (localIndex < 0)
         {
@@ -858,11 +789,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
         int lowBoundary = ((rowIndex - 1) * 8);
         int hieBoundary = ((rowIndex) * 8) - 1;
         FigureTeamType figureTeamType = figure.TeamType;
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index + 2;
         if (localIndex > hieBoundary | localIndex < lowBoundary)
         {
@@ -890,11 +817,7 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
         int lowBoundary = ((rowIndex - 1) * 8);
         int hieBoundary = ((rowIndex) * 8) - 1;
         FigureTeamType figureTeamType = figure.TeamType;
-        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure();
-        List<BoardCellId> localCellIdsListForDragg = new List<BoardCellId>();
-        List<BoardCellId> localCellIdsListCanBeCapture = new List<BoardCellId>();
-        localCellMarkupStruct.canBeCapture = localCellIdsListCanBeCapture;
-        localCellMarkupStruct.canBeDreggedTo = localCellIdsListForDragg;
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
         int localIndex = index - 2;
         if (localIndex > hieBoundary | localIndex < lowBoundary)
         {
@@ -916,4 +839,107 @@ public class FigureDefaultMonoBehavior : MonoBehaviour
         return localCellMarkupStruct;
     }
 
+    // castle
+
+    public CellMarkupStructure GetRightCastleCellsId(List<BoardCell> cellIdsList, int index)
+    {
+        int rowIndex = (int)(index / 8) + 1;
+        int lowBoundary = ((rowIndex - 1) * 8);
+        int hieBoundary = ((rowIndex) * 8) - 1;
+        FigureTeamType figureTeamType = figure.TeamType;
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
+        int localIndex = index;
+        BoardCellId kingPosition = cellIdsList[index].CellId;
+        CellMarkupStructure endPositionOfKingAndRook = GetRightMoveCellsIdByCount(cellIdsList, index, 2, true, false);
+        if(endPositionOfKingAndRook.canBeDreggedTo.Count != 2)
+        {
+            return localCellMarkupStruct;
+        }
+        BoardCellId kingEndPosition = endPositionOfKingAndRook.canBeDreggedTo[1];
+        BoardCellId rookEndPosition = endPositionOfKingAndRook.canBeDreggedTo[0];
+        do
+        {
+            BoardCell boardCell = GetRightCell(cellIdsList, ref localIndex, lowBoundary, hieBoundary);
+            if (boardCell != null)
+            {
+                if (boardCell.figureOnCell == null)
+                {
+                    continue;
+                }
+                else
+                {
+                    Rook localRook = boardCell.figureOnCell.GetComponent<Rook>();
+                    if (localRook == null)
+                        break;
+                    if (localRook.FirsMove)
+                    {
+                        CastleStructure localCastleStructure = new CastleStructure();
+                        localCastleStructure.Init(kingPosition, kingEndPosition, boardCell.CellId, rookEndPosition);
+                        localCellMarkupStruct.canBeCastle.Add(localCastleStructure);
+                        break;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                break;
+            }
+        } while (true);
+        return localCellMarkupStruct;
+    }
+
+    public CellMarkupStructure GetLeftCastleCellsId(List<BoardCell> cellIdsList, int index)
+    {
+        int rowIndex = (int)(index / 8) + 1;
+        int lowBoundary = ((rowIndex - 1) * 8);
+        int hieBoundary = ((rowIndex) * 8) - 1;
+        FigureTeamType figureTeamType = figure.TeamType;
+        CellMarkupStructure localCellMarkupStruct = new CellMarkupStructure().Init();
+        int localIndex = index;
+        BoardCellId kingPosition = cellIdsList[index].CellId;
+        CellMarkupStructure endPositionOfKingAndRook = GetLeftMoveCellsIdByCount(cellIdsList, index, 2, true, false);
+        if (endPositionOfKingAndRook.canBeDreggedTo.Count != 2)
+        {
+            return localCellMarkupStruct;
+        }
+        BoardCellId kingEndPosition = endPositionOfKingAndRook.canBeDreggedTo[1];
+        BoardCellId rookEndPosition = endPositionOfKingAndRook.canBeDreggedTo[0];
+        do
+        {
+            BoardCell boardCell = GetLeftCell(cellIdsList, ref localIndex, lowBoundary, hieBoundary);
+            if (boardCell != null)
+            {
+                if (boardCell.figureOnCell == null)
+                {
+                    continue;
+                }
+                else
+                {
+                    Rook localRook = boardCell.figureOnCell.GetComponent<Rook>();
+                    if (localRook == null)
+                        break;
+                    if (localRook.FirsMove)
+                    {
+                        CastleStructure localCastleStructure = new CastleStructure();
+                        localCastleStructure.Init(kingPosition, kingEndPosition, boardCell.CellId, rookEndPosition);
+                        localCellMarkupStruct.canBeCastle.Add(localCastleStructure);
+                        break;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                break;
+            }
+        } while (true);
+        return localCellMarkupStruct;
+    }
 }

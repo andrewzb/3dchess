@@ -19,7 +19,6 @@ public class Board : SingeltonMonoBehavior<Board>
     public FigureTeamType currentTeamTurn { get; set; }
     private List<BoardCellStruct> defaultBoardStructure;
     // list of state updetes count from default
-    private List<TurnChange> ChangeList;
     private Ray lastRay;
     private BoardCell selectedBoardSell = null;
     private CellMarkupStructure markCellsAsCanBeDragToList = new CellMarkupStructure ();
@@ -32,8 +31,7 @@ public class Board : SingeltonMonoBehavior<Board>
         currentTeamTurn = FigureTeamType.black;
         SetMainCamera();
         defaultBoardStructure = new DefaultBoardConfig().defaultBoardListConfig;
-        markCellsAsCanBeDragToList.canBeCapture = new List<BoardCellId>();
-        markCellsAsCanBeDragToList.canBeDreggedTo = new List<BoardCellId>();
+        markCellsAsCanBeDragToList.Init();
     }
 
     private void Start()
@@ -55,8 +53,6 @@ public class Board : SingeltonMonoBehavior<Board>
                     return;
                 if (selectedBoardSell != null && !isCellMarkapEmpty() && selectedBoardSell.CellId == boardCell.CellId)
                 {
-
-                    Debug.Log("1111");
                     selectedBoardSell.ResetCellMark();
                     ResetCellsMarkAsADefault(markCellsAsCanBeDragToList);
                     selectedBoardSell = null;
@@ -68,19 +64,25 @@ public class Board : SingeltonMonoBehavior<Board>
                     // 1 select your figure it will reset selection
                     // 2 select avalible drag cell it will relocat it
                     // Relocat Figure
-                    if (CellInDraggableList(boardCell, markCellsAsCanBeDragToList))
+                    if (CellInAvalibleList(boardCell, markCellsAsCanBeDragToList))
                     {
-                        RelocateFigureToCell(selectedBoardSell, boardCell);
-                        selectedBoardSell.ResetCellMark();
-                        ResetCellsMarkAsADefault(markCellsAsCanBeDragToList);
-                        selectedBoardSell = null;
-                        ResetMarksCells();
+                        if (isCastle(boardCell, markCellsAsCanBeDragToList))
+                        {
+                            MakeCastle(selectedBoardSell, boardCell);
+                        }
+                        else
+                        {
+                            RelocateFigureToCell(selectedBoardSell, boardCell);
+                        }
+                            selectedBoardSell.ResetCellMark();
+                            ResetCellsMarkAsADefault(markCellsAsCanBeDragToList);
+                            selectedBoardSell = null;
+                            ResetMarksCells();
                     }
                     else
                     {
                         if (boardCell.figureOnCell != null)
                         {
-
 
                             selectedBoardSell.ResetCellMark();
                             ResetCellsMarkAsADefault(markCellsAsCanBeDragToList);
@@ -110,14 +112,13 @@ public class Board : SingeltonMonoBehavior<Board>
 
     private bool isCellMarkapEmpty()
     {
-        return markCellsAsCanBeDragToList.canBeCapture.Count == 0 && markCellsAsCanBeDragToList.canBeDreggedTo.Count == 0;
+        return markCellsAsCanBeDragToList.canBeCapture.Count == 0 && markCellsAsCanBeDragToList.canBeDreggedTo.Count == 0 && markCellsAsCanBeDragToList.canBeCastle.Count == 0;
 
     }
 
     private void ResetMarksCells()
     {
-        markCellsAsCanBeDragToList.canBeCapture = new List<BoardCellId>();
-        markCellsAsCanBeDragToList.canBeDreggedTo = new List<BoardCellId>();
+        markCellsAsCanBeDragToList.Init();
     }
 
     private void RelocateFigureToCell(BoardCell selectedBoardSell, BoardCell boardCell)
@@ -132,46 +133,99 @@ public class Board : SingeltonMonoBehavior<Board>
         }
         boardCell.figureOnCell = localFigure;
         localFigure.transform.position = localNewFigurePosition;
+        localFigure.GetComponent<IFigure>().AfterMove();
         // Call End of turn handler
         EventHandler.CallSwithToOtherPlayerTeamEvent(currentTeamTurn == FigureTeamType.white ? FigureTeamType.black :FigureTeamType.white);
+        WriteTurnChanges(selectedBoardSell, boardCell);
     }
+
+    private bool isCastle(BoardCell boardCell, CellMarkupStructure cellMarkup)
+    {
+        int canBeCastleCouresponeCellIndex = cellMarkup.canBeCastle.FindIndex(castleStruct => castleStruct.KingTo == boardCell.CellId);
+        if (canBeCastleCouresponeCellIndex != -1)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void MakeCastle(BoardCell kingFromCell, BoardCell kingToCell)
+    {
+        int courespondetIndex = markCellsAsCanBeDragToList.canBeCastle.FindIndex(castleStructure => castleStructure.KingTo == kingToCell.CellId);
+        if (courespondetIndex != -1)
+        {
+            BoardCell rookFromCell = GetBoardCellByIndex(markCellsAsCanBeDragToList.canBeCastle[courespondetIndex].RookFrom);
+            BoardCell rookToCell = GetBoardCellByIndex(markCellsAsCanBeDragToList.canBeCastle[courespondetIndex].RookTo);
+            GameObject rook = rookFromCell.figureOnCell;
+            GameObject king = kingFromCell.figureOnCell;
+            if (rook != null && king != null)
+            {
+                Vector3 localNewKingPosition = kingToCell.GetCellPivotPointVector();
+                Vector3 localNewRookPosition = rookToCell.GetCellPivotPointVector();
+                kingFromCell.figureOnCell = null;
+                rookFromCell.figureOnCell = null;
+                rookToCell.figureOnCell = rook;
+                kingToCell.figureOnCell = king;
+                rook.transform.position = localNewRookPosition;
+                king.transform.position = localNewKingPosition;
+                rook.GetComponent<IFigure>().AfterMove();
+                king.GetComponent<IFigure>().AfterMove();
+                EventHandler.CallSwithToOtherPlayerTeamEvent(currentTeamTurn == FigureTeamType.white ? FigureTeamType.black : FigureTeamType.white);
+                WriteTurnChanges(kingFromCell, kingToCell);
+            }
+        }
+    }
+
+    private BoardCell GetBoardCellByIndex(BoardCellId boardCellId)
+    {
+        int index = BoardCellsList.FindIndex(cell => cell.CellId == boardCellId);
+        return BoardCellsList[index];
+    }
+
 
     public void SetMainCamera()
     {
         mainCamera = Camera.main;
     }
 
-    public void MarkCellsByType(CellMarkupStructure CellMarkup)
+    public void MarkCellsByType(CellMarkupStructure cellMarkup)
     {
         foreach (var cell in BoardCellsList)
         {
-            int canBeDreggedCouresponeCellIndex = CellMarkup.canBeDreggedTo.FindIndex(id => id == cell.CellId);
-            int canBeCapturCouresponeCellIndex = CellMarkup.canBeCapture.FindIndex(id => id == cell.CellId);
+            int canBeDreggedCouresponeCellIndex = cellMarkup.canBeDreggedTo.FindIndex(id => id == cell.CellId);
+            int canBeCapturCouresponeCellIndex = cellMarkup.canBeCapture.FindIndex(id => id == cell.CellId);
+            int canBeCastleCouresponeCellIndex = cellMarkup.canBeCastle.FindIndex(castleStruct => castleStruct.KingTo == cell.CellId);
             if (canBeDreggedCouresponeCellIndex != -1)
                 cell.MarkAsCanBeDragger();
             if (canBeCapturCouresponeCellIndex != -1)
                 cell.MarkAsCanBeCapture();
+            if (canBeCastleCouresponeCellIndex != -1)
+                cell.MarkAsCastled();
         }
     }
 
-    public void ResetCellsMarkAsADefault(CellMarkupStructure CellMarkup)
+    public void ResetCellsMarkAsADefault(CellMarkupStructure cellMarkup)
     {
         foreach (var cell in BoardCellsList)
         {
-            int canBeDreggedCouresponeCellIndex = CellMarkup.canBeDreggedTo.FindIndex(id => id == cell.CellId);
-            int canBeCapturCouresponeCellIndex = CellMarkup.canBeCapture.FindIndex(id => id == cell.CellId);
+            int canBeDreggedCouresponeCellIndex = cellMarkup.canBeDreggedTo.FindIndex(id => id == cell.CellId);
+            int canBeCapturCouresponeCellIndex = cellMarkup.canBeCapture.FindIndex(id => id == cell.CellId);
+            int canBeCastleCouresponeCellIndex = cellMarkup.canBeCastle.FindIndex(castleStruct => castleStruct.KingTo == cell.CellId);
             if (canBeDreggedCouresponeCellIndex != -1)
                 cell.ResetCellMark();
             if (canBeCapturCouresponeCellIndex != -1)
                 cell.ResetCellMark();
+            if (canBeCastleCouresponeCellIndex != -1)
+                cell.ResetCellMark();
         }
     }
 
-    public bool CellInDraggableList(BoardCell boardCell, CellMarkupStructure CellMarkup)
+    public bool CellInAvalibleList(BoardCell boardCell, CellMarkupStructure cellMarkup)
     {
-        int canBeDreggedCouresponeCellIndex = CellMarkup.canBeDreggedTo.FindIndex(id => id == boardCell.CellId);
-        int canBeCapturCouresponeCellIndex = CellMarkup.canBeCapture.FindIndex(id => id == boardCell.CellId);
-        if (canBeDreggedCouresponeCellIndex != -1 || canBeCapturCouresponeCellIndex != -1)
+        int canBeDreggedCouresponeCellIndex = cellMarkup.canBeDreggedTo.FindIndex(id => id == boardCell.CellId);
+        int canBeCapturCouresponeCellIndex = cellMarkup.canBeCapture.FindIndex(id => id == boardCell.CellId);
+        int canBeCastleCouresponeCellIndex = cellMarkup.canBeCastle.FindIndex(castleStruct => castleStruct.KingTo == boardCell.CellId);
+        if (canBeDreggedCouresponeCellIndex != -1 || canBeCapturCouresponeCellIndex != -1 || canBeCastleCouresponeCellIndex != -1)
         {
             return true;
         }
@@ -221,6 +275,17 @@ public class Board : SingeltonMonoBehavior<Board>
 
         }
     }
+
+    private void WriteTurnChanges(BoardCell fromBoardCell, BoardCell toBoardCell)
+    {
+        TurnChange currentTurnChange = new TurnChange(fromBoardCell.CellId, toBoardCell.CellId);
+        EventHandler.CallWriteTurnChangesEvent(currentTurnChange);
+
+    }
+
+
+
+
 
     public void UpdateBoard()
     {

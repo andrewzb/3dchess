@@ -76,11 +76,11 @@ Material:
     - _DstBlend: 0
     - _EmissionEnabled: 0
     - _FlipbookMode: 0
-    - _GlossMapScale: 0.31
+    - _GlossMapScale: 0.057
     - _Glossiness: 0.567
     - _GlossyReflections: 1
     - _LightingEnabled: 1
-    - _Metallic: 0.129
+    - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005

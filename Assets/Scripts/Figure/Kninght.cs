@@ -5,11 +5,14 @@ using System.Linq;
 
 public class Kninght : FigureDefaultMonoBehavior, IFigure
 {
+    public void AfterMove()
+    {
+        return;
+    }
+
     public CellMarkupStructure GetCellIdsOnWithCanBeDraged(List<BoardCell> cellIdsList, BoardCell boardCell)
     {
-        CellMarkupStructure localCellIdsListBYType = new CellMarkupStructure();
-        localCellIdsListBYType.canBeCapture = new List<BoardCellId>();
-        localCellIdsListBYType.canBeDreggedTo = new List<BoardCellId>();
+        CellMarkupStructure localCellIdsListBYType = new CellMarkupStructure().Init();
         FigureTeamType teamType = figure.TeamType;
         BoardCellId currentCellId = boardCell.CellId;
         int index = cellIdsList.FindIndex(c => c.CellId == boardCell.CellId);

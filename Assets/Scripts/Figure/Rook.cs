@@ -5,12 +5,18 @@ using System.Linq;
 
 public class Rook : FigureDefaultMonoBehavior, IFigure
 {
+    public bool FirsMove { get; private set; } = true;
+
+    public void AfterMove()
+    {
+        FirsMove = false;
+    }
+
+
 
     public CellMarkupStructure GetCellIdsOnWithCanBeDraged(List<BoardCell> cellIdsList, BoardCell boardCell)
     {
-        CellMarkupStructure localCellIdsListBYType = new CellMarkupStructure();
-        localCellIdsListBYType.canBeCapture = new List<BoardCellId>();
-        localCellIdsListBYType.canBeDreggedTo = new List<BoardCellId>();
+        CellMarkupStructure localCellIdsListBYType = new CellMarkupStructure().Init();
         BoardCellId currentCellId = boardCell.CellId;
         int index = cellIdsList.FindIndex(c => c.CellId == boardCell.CellId);
         if (index != -1)

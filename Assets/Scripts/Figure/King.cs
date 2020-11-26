@@ -1,15 +1,21 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
 public class King : FigureDefaultMonoBehavior, IFigure
 {
+    public bool FirsMove { get; private set; } = true;
+
+    public void AfterMove()
+    {
+        FirsMove = false;
+    }
+
     public CellMarkupStructure GetCellIdsOnWithCanBeDraged(List<BoardCell> cellIdsList, BoardCell boardCell)
     {
-        CellMarkupStructure localCellIdsListBYType = new CellMarkupStructure();
-        localCellIdsListBYType.canBeCapture = new List<BoardCellId>();
-        localCellIdsListBYType.canBeDreggedTo = new List<BoardCellId>();
+        CellMarkupStructure localCellIdsListBYType = new CellMarkupStructure().Init();
         FigureTeamType teamType = figure.TeamType;
         BoardCellId currentCellId = boardCell.CellId;
         int index = cellIdsList.FindIndex(c => c.CellId == boardCell.CellId);
@@ -42,10 +48,22 @@ public class King : FigureDefaultMonoBehavior, IFigure
                .Concat(left.canBeDreggedTo)
                .Concat(forwardLeft.canBeDreggedTo)
                .Concat(forwardRight.canBeDreggedTo)
-
                .Concat(backwardLeft.canBeDreggedTo)
                .Concat(backwardRight.canBeDreggedTo)
                .ToList();
+
+            if(FirsMove)
+            {
+                CellMarkupStructure castleLeft = GetLeftCastleCellsId(cellIdsList, index);
+                CellMarkupStructure castleRight = GetRightCastleCellsId(cellIdsList, index);
+
+                localCellIdsListBYType.canBeCastle = localCellIdsListBYType.canBeCastle
+                       .Concat(castleLeft.canBeCastle)
+                       .Concat(castleRight.canBeCastle)
+                       .ToList();
+
+            }
+
         }
         return localCellIdsListBYType;
     }
