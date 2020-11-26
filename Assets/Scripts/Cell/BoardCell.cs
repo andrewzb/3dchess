@@ -24,6 +24,8 @@ public class BoardCell : MonoBehaviour
     public Material cantBeDragedMaterial;
     [SerializeField]
     public Material captureCellMaterial;
+    [SerializeField]
+    public Material castleCellMaterial;
     public GameObject figureOnCell = null;
 
     private ActionColorsType markStatus = ActionColorsType.normal;
@@ -46,7 +48,14 @@ public class BoardCell : MonoBehaviour
             markStatus = ActionColorsType.selected;
             cellMarker.GetComponent<MeshRenderer>().material = selectedMaterial;
         }
-
+    }
+    public void MarkAsCastled ()
+    {
+        if (markStatus != ActionColorsType.castle)
+        {
+            markStatus = ActionColorsType.castle;
+            cellMarker.GetComponent<MeshRenderer>().material = castleCellMaterial;
+        }
     }
 
     public void MarkAsCanBeDragger()

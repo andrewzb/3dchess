@@ -4,7 +4,8 @@
     selected,
     canBeDraged,
     cantBeDraged,
-    captureCell
+    captureCell,
+    castle
 }
 
 public enum FigureTeamType
