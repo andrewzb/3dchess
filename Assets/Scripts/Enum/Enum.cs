@@ -5,7 +5,17 @@
     canBeDraged,
     cantBeDraged,
     captureCell,
-    castle
+    castle,
+    inDanger
+}
+
+public enum GameEvent
+{
+    check, // шаг
+    mate, // мат
+    checkmate, // шаг и мат
+    stalemate, // пат
+    none
 }
 
 public enum FigureTeamType
@@ -28,7 +38,8 @@ public enum FigureType
     queen,
     rook,
     bishop,
-    knight
+    knight,
+    none
 }
 
 public enum BoardFirureId

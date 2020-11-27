@@ -25,10 +25,12 @@ public class BoardCell : MonoBehaviour
     [SerializeField]
     public Material captureCellMaterial;
     [SerializeField]
+    public Material cellInDanger;
+    [SerializeField]
     public Material castleCellMaterial;
     public GameObject figureOnCell = null;
 
-    private ActionColorsType markStatus = ActionColorsType.normal;
+    public ActionColorsType markStatus { get; private set; } = ActionColorsType.normal;
 
     public void ResetCellMark()
     {
@@ -73,6 +75,15 @@ public class BoardCell : MonoBehaviour
         {
             markStatus = ActionColorsType.captureCell;
             cellMarker.GetComponent<MeshRenderer>().material = captureCellMaterial;
+        }
+    }   
+    
+    public void MarkAsInDanger()
+    {
+        if (markStatus != ActionColorsType.inDanger)
+        {
+            markStatus = ActionColorsType.inDanger;
+            cellMarker.GetComponent<MeshRenderer>().material = cellInDanger;
         }
     }
 

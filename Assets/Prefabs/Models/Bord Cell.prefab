@@ -59,6 +59,7 @@ MonoBehaviour:
   cantBeDragedMaterial: {fileID: 2100000, guid: 539da114faf0cbd49b38e318a7d891b8,
     type: 2}
   captureCellMaterial: {fileID: 2100000, guid: b9d32fc349ff59b40bd782cc3a22e77b, type: 2}
+  cellInDanger: {fileID: 2100000, guid: 15ed89370089c3f4aa7f1e1eaf62bb3e, type: 2}
   castleCellMaterial: {fileID: 2100000, guid: 3c1414dda4995ca4eb6e8127c806c842, type: 2}
   figureOnCell: {fileID: 0}
 --- !u!65 &-7408207031441527645

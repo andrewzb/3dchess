@@ -35,12 +35,14 @@ public class SceneManager : MonoBehaviour
     {
         EventHandler.SwithToOtherPlayerTeamEvent += SwithToOtherPlayerManager;
         EventHandler.WriteTurnChangesEvent += WriteTurnChangeInList;
+        EventHandler.EmitGameEvent += DisplayBoardEvent;
     }
 
     private void OnDisable()
     {
         EventHandler.SwithToOtherPlayerTeamEvent -= SwithToOtherPlayerManager;
         EventHandler.WriteTurnChangesEvent -= WriteTurnChangeInList;
+        EventHandler.EmitGameEvent -= DisplayBoardEvent;
     }
 
 
@@ -93,6 +95,11 @@ public class SceneManager : MonoBehaviour
     {
         camera.SetActive(isActive);
         audioListener.enabled = isActive;
+    }
+
+    private void DisplayBoardEvent(GameEvent gameEvent)
+    {
+        Debug.Log(gameEvent);
     }
 
 }
